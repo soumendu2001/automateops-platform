@@ -13,5 +13,19 @@ jobs:
          run: |
            sudo apt update
            sudo apt install ansible -y
+
+       - name: Install Ansible Collection
+         run: |
+           ansible-galaxy colletion install community.crypto ansible.posix
+
+       - name: Install SSH key
+         run:
+           mkdir -p ~/.ssh
+           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+           chmod 600 ~/.ssh/id_rsa
+
+           
+
+           
            
            
