@@ -12,4 +12,6 @@ jobs:
        - name: Install Ansible
          run: |
            sudo apt update
+           sudo apt install ansible -y
+           
            
