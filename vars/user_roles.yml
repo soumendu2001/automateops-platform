@@ -1,1 +1,29 @@
 
+
+user_roles:
+  SIAM:
+     groups: ["SIAM"]
+     sudo: ""
+  administrator:
+    groups: ["administrator"]
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+  webadmin:
+    groups: ["webadmin"]
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+
+  dbadmin:
+    groups: ["dbadmin"]
+    sudo: "ALL=(ALL) ALL"
+
+  readonly:
+    groups: ["readonly"]
+    sudo: ""
+
+  developers:
+     groups: ["developers"]
+     sudo: ""
+   
+  management:
+     groups: ["management"]
+     sudo: ""
+
