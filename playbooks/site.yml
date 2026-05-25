@@ -1,1 +1,17 @@
-
+- name: Bootstrap + PostgreSQL + Users
+  hosts: all
+  become: yes
+  vars_files:
+    - ../vars/users.yml
+    - ../vars/user_roles.yml
+  roles:
+    - role: postgresql
+  tasks:
+     - name: Install common package
+       package:
+         name:
+            - git
+            - curl
+            - unzip
+          state: present
+          
