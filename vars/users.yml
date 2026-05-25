@@ -1,1 +1,61 @@
+  
+users:
+  - name: sudip
+    group_name: administrator
+    state: absent
+    shell: /bin/bash
+    
+  - name: soumyendu
+    group_name: webadmin
+    state: absent
+    shell: /bin/bash
+    
+  - name: alice
+    group_name: webadmin
+    state: absent
+    shell: /bin/bash
+    
+
+  - name: bob
+    group_name: dbadmin
+    state: absent
+    shell: /bin/bash
+    
+
+  - name: charlie
+    group_name: developers
+    state: absent
+    shell: /bin/bash
+
+  - name: julia
+    group_name: SIAM
+    state: absent
+    shell: /bin/bash
+    
+  - name: sam
+    group_name: management
+    state: absent
+    shell: /bin/bash
+    
+  - name: max
+    group_name: readonly
+    state: absent
+    shell: /bin/bash
+  
+  - name: david
+    group_name: management
+    state: absent
+    shell: /bin/bash
+
+  - name: adam
+    group_name: SIAM
+    state: absent
+    shell: /bin/bash
+
+  
+  - name: martyna
+    group_name: management
+    state: absent
+    shell: /bin/bash
+    
 
