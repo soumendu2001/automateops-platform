@@ -34,7 +34,7 @@
 - name: Initialize PostgreSQL database (RHEL/Amazon)
   command: postgresql-setup --initdb
   args:
-     creates: "{{ postgres_data_dir }}"/PG_VERSION"
+     creates: "{{ postgres_data_dir }}/PG_VERSION"
   when:
     - ansible_os_family == "RedHat"
     - not pg_initialized.stat.exists
