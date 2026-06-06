@@ -4,3 +4,10 @@ postgres_data_dir: >-
   {{ '/var/lib/postgresql/' ~ postgres_version ~ '/main'
      if ansible_os_family == 'Debian'
      else '/var/lib/pgsql/' ~ postgres_version ~ '/data' }}
+allow_remote_connections: true
+
+pg_hba_custom_rules:
+  - database: all
+    user: dbadmin
+    address: 10.0.0.0/24
+    method: md5
