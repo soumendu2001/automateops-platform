@@ -5,7 +5,7 @@
     - ../vars/users.yml
     - ../vars/user_roles.yml
   roles:
-    - role: postgresql
+    - role: roles/postgresql
   tasks:
      - name: Install common package
        package:
