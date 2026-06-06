@@ -3,6 +3,7 @@
     systemctl stop postgresql || true
     rm -rf {{ postgres_data_dir }}/*
   become: yes
+  when: ansible_os_family == "RedHat"
 
 - name: Check if PostgreSQL data directory exists
   stat:
