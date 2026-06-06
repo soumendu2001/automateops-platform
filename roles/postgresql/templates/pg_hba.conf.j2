@@ -1,1 +1,27 @@
+# PostgreSQL Client Authentication Configuration File
 
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# Local connections
+local   all             all                                     peer
+
+# IPv4 local connections
+host    all             all             127.0.0.1/32            md5
+
+# IPv6 local connections
+host    all             all             ::1/128                 md5
+
+# Allow replication connections from localhost
+local   replication     all                                     peer
+host    replication     all             127.0.0.1/32            md5
+host    replication     all             ::1/128                 md5
+
+# 🔹 Allow remote connections (controlled via variable)
+{% if allow_remote_connections | default(true) %}
+host    all             all             0.0.0.0/0               md5
+{% endif %}
+
+# 🔹 Optional: Restrict specific users/networks (example)
+{% for item in pg_hba_custom_rules | default([]) %}
+host    {{ item.database }}    {{ item.user }}    {{ item.address }}    {{ item.method }}
+{% endfor %}
