@@ -16,7 +16,7 @@ jobs:
 
        - name: Install Ansible Collection
          run: |
-           ansible-galaxy colletion install community.crypto ansible.posix
+           ansible-galaxy collection install community.crypto ansible.posix
 
        - name: Install SSH key
          run:
