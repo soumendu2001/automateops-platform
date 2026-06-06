@@ -86,6 +86,6 @@
         validate: '/usr/sbin/visudo -cf %s'
       when:
         - item.value.sudo | length > 0
-      loop: "{{ user_roles | dict2items }}" - name: Apply User configuration
+      loop: "{{ user_roles | dict2items }}"
   
     
