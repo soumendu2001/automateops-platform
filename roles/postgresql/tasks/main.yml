@@ -6,4 +6,4 @@
 - import_tasks: configure_pgdata.yml
 
 - import_tasks: service.yml
-- impprt_tasks: pg_hba.yml  
+- import_tasks: pg_hba.yml  
