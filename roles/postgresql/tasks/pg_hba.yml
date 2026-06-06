@@ -1,5 +1,5 @@
 - name: Deploy pg_hba config
   template:
     src: pg_hba.conf.j2
-    dest: " {{ postgres_data_dir }}"/pg_hba.conf
+    dest: "{{ postgres_data_dir }}"/pg_hba.conf
   notify: Restart PostgreSQL
