@@ -1,1 +1,8 @@
+- import_tasks: install_debian.yml
+  when: ansible_os_family == "Debian"
 
+- import_tasks: install_rhel.yml
+  when: ansible_os_family == "RedHat"
+
+- import_tasks: service.yml
+- impprt_tasks: pg_hba.yml  
