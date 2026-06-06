@@ -11,3 +11,14 @@ pg_hba_custom_rules:
     user: dbadmin
     address: 10.0.0.0/24
     method: md5
+postgres_port: 5432
+listen_addresses: "*"
+
+shared_buffers: 256MB
+work_mem: 4MB
+maintenance_work_mem: 64MB
+effective_cache_size: 1GB
+
+timezone: "UTC"
+
+postgres_extra_config: []
