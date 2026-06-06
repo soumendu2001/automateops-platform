@@ -21,15 +21,15 @@
        ansible.builtin.group:
          name: "{{ item }}"
          state: present
-         loop: >-
-           {{
+       loop: >-
+          {{
              users
              | map(attribute='group_name')
              | map('extract', user_roles)
              | map(attribute='groups')
              | flatten
              | unique
-            }}
+          }}
 
      - name: Create Users
        ansible.builtin.user:
