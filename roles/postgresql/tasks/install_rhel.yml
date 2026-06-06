@@ -1,1 +1,5 @@
-
+- name: Install Postgresql
+  yum:
+    name: postgresql
+    state: present
+    update_cache: yes
