@@ -1,3 +1,9 @@
+- name: Force clean PostgreSQL directory before init
+  shell: |
+    systemctl stop postgresql || true
+    rm -rf {{ postgres_data_dir }}/*
+  become: yes
+
 - name: Check if PostgreSQL data directory exists
   stat:
     path: "{{ postgres_data_dir }}"
