@@ -1,1 +1,73 @@
+- name: Create application database
+  community.postgresql.postgresql_db:
+    name: app_db
+    state: present
+  become: true
+  become_user: postgres
 
+- name: Create user database
+  community.postgresql.postgresql_db:
+    name: user_db
+    state: present
+  become: true
+  become_user: postgres
+
+- name: Create audit database
+  community.postgresql.postgresql_db:
+    name: audit_db
+    state: present
+  become: true
+  become_user: postgres
+- name: Create user schema tables
+  community.postgresql.postgresql_query:
+    db: user_db
+    query: |
+      CREATE TABLE IF NOT EXISTS users (
+          user_id SERIAL PRIMARY KEY,
+          username TEXT UNIQUE NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS roles (
+          role_id SERIAL PRIMARY KEY,
+          role_name TEXT UNIQUE NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS user_roles (
+          user_id INT REFERENCES users(user_id),
+          role_id INT REFERENCES roles(role_id),
+          PRIMARY KEY (user_id, role_id)
+      );
+  become: true
+  become_user: postgres
+
+  - name: Create application schema tables
+  community.postgresql.postgresql_query:
+    db: app_db
+    query: |
+      CREATE TABLE IF NOT EXISTS applications (
+          app_id SERIAL PRIMARY KEY,
+          app_name TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS transactions (
+          txn_id SERIAL PRIMARY KEY,
+          app_id INT REFERENCES applications(app_id),
+          amount NUMERIC
+      );
+  become: true
+  become_user: postgres
+
+  - name: Create audit schema tables
+  community.postgresql.postgresql_query:
+    db: audit_db
+    query: |
+      CREATE TABLE IF NOT EXISTS audit_logs (
+          log_id SERIAL PRIMARY KEY,
+          user_id INT,
+          action TEXT,
+          timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+  become: true
+  become_user: postgres
+
+  
