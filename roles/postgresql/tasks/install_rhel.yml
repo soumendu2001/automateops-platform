@@ -1,4 +1,36 @@
-- name: Install PostgreSQL (Generic RHEL/Amazon)
-  package:
-    name: postgresql-server
+- name: Debug OS
+  debug:
+    msg: "Distribution = {{ ansible_distribution }} Version = {{ ansible_distribution_version }}"
+
+# ✅ Amazon Linux 2
+- name: Install PostgreSQL (Amazon Linux 2)
+  yum:
+    name:
+      - postgresql
+      - postgresql-server
     state: present
+  when:
+    - ansible_distribution == "Amazon"
+    - ansible_distribution_major_version == "2"
+
+# ✅ Amazon Linux 2023 (VERY IMPORTANT)
+- name: Install PostgreSQL (Amazon Linux 2023)
+  dnf:
+    name:
+      - postgresql15
+      - postgresql15-server
+    state: present
+  when:
+    - ansible_distribution == "Amazon"
+    - ansible_distribution_major_version == "2023"
+
+# ✅ RHEL / Rocky / AlmaLinux
+- name: Install PostgreSQL (RHEL family)
+  dnf:
+    name:
+      - postgresql-server
+      - postgresql
+    state: present
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution not in ["Amazon"]
