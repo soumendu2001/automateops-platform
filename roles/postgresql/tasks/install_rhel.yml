@@ -1,19 +1,4 @@
-- name: Install PostgreSQL repo (PGDG)
-  dnf:
-    name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+- name: Install PostgreSQL (Generic RHEL/Amazon)
+  package:
+    name: postgresql-server
     state: present
-
-- name: Disable built-in PostgreSQL module
-  command: dnf -qy module disable postgresql
-
-- name: Install PostgreSQL
-  dnf:
-    name:
-      - postgresql14-server
-      - postgresql14
-    state: present
-
-- name: Initialize PostgreSQL database
-  command: /usr/pgsql-14/bin/postgresql-14-setup initdb
-  args:
-    creates: /var/lib/pgsql/14/data/PG_VERSION
