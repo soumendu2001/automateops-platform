@@ -10,4 +10,6 @@
 
 - import_tasks: service.yml
 
+- import_tasks: database.yml
+
 - import_tasks: pg_hba.yml
