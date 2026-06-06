@@ -1,1 +1,57 @@
+# -----------------------------
+# PostgreSQL configuration file
+# -----------------------------
 
+# CONNECTIONS AND AUTHENTICATION
+listen_addresses = '{{ listen_addresses | default("*") }}'
+port = {{ postgres_port | default(5432) }}
+max_connections = {{ max_connections | default(100) }}
+
+# MEMORY SETTINGS
+shared_buffers = {{ shared_buffers | default("256MB") }}
+work_mem = {{ work_mem | default("4MB") }}
+maintenance_work_mem = {{ maintenance_work_mem | default("64MB") }}
+
+# CHECKPOINT / WAL
+wal_buffers = {{ wal_buffers | default("16MB") }}
+checkpoint_completion_target = {{ checkpoint_completion_target | default(0.7) }}
+wal_level = {{ wal_level | default("replica") }}
+
+# LOGGING
+logging_collector = on
+log_directory = '{{ log_directory | default("log") }}'
+log_filename = '{{ log_filename | default("postgresql-%a.log") }}'
+log_truncate_on_rotation = on
+log_rotation_age = 1d
+log_rotation_size = 0
+log_line_prefix = '%m [%p] %u@%d '
+
+log_min_messages = {{ log_min_messages | default("warning") }}
+log_min_error_statement = {{ log_min_error_statement | default("error") }}
+log_min_duration_statement = {{ log_min_duration_statement | default(-1) }}
+
+# QUERY TUNING
+effective_cache_size = {{ effective_cache_size | default("1GB") }}
+default_statistics_target = {{ default_statistics_target | default(100) }}
+
+# PARALLELISM
+max_worker_processes = {{ max_worker_processes | default(8) }}
+max_parallel_workers = {{ max_parallel_workers | default(8) }}
+max_parallel_workers_per_gather = {{ max_parallel_workers_per_gather | default(2) }}
+
+# AUTOVACUUM
+autovacuum = on
+autovacuum_max_workers = {{ autovacuum_max_workers | default(3) }}
+autovacuum_naptime = {{ autovacuum_naptime | default("1min") }}
+
+# CLIENT CONNECTION DEFAULTS
+datestyle = 'iso, mdy'
+timezone = '{{ timezone | default("UTC") }}'
+
+# SECURITY / SSL (optional)
+ssl = {{ ssl | default("off") }}
+
+# CUSTOM SETTINGS (Extensible block)
+{% for item in postgres_extra_config | default([]) %}
+{{ item.key }} = {{ item.value }}
+{% endfor %}
