@@ -40,14 +40,14 @@
   become: true
   become_user: postgres
 
-  - name: Create application schema tables
-    community.postgresql.postgresql_query:
-      db: app_db
-      query: |
-        CREATE TABLE IF NOT EXISTS applications (
-          app_id SERIAL PRIMARY KEY,
-          app_name TEXT NOT NULL
-           );
+- name: Create application schema tables
+  community.postgresql.postgresql_query:
+    db: app_db
+    query: |
+      CREATE TABLE IF NOT EXISTS applications (
+        app_id SERIAL PRIMARY KEY,
+        app_name TEXT NOT NULL
+         );
 
         CREATE TABLE IF NOT EXISTS transactions (
           txn_id SERIAL PRIMARY KEY,
@@ -57,16 +57,16 @@
   become: true
   become_user: postgres
 
-  - name: Create audit schema tables
-    community.postgresql.postgresql_query:
-      db: audit_db
-      query: |
-        CREATE TABLE IF NOT EXISTS audit_logs (
-          log_id SERIAL PRIMARY KEY,
-          user_id INT,
-          action TEXT,
-          timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-         );
+- name: Create audit schema tables
+  community.postgresql.postgresql_query:
+    db: audit_db
+    query: |
+      CREATE TABLE IF NOT EXISTS audit_logs (
+        log_id SERIAL PRIMARY KEY,
+        user_id INT,
+        action TEXT,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+       );
   become: true
   become_user: postgres
 
