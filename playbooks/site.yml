@@ -13,7 +13,7 @@
            - git
            - curl
            - unzip
-          state: present
+         state: present
 
   
   
@@ -80,12 +80,12 @@
 
      - name: Setup sudo access
        ansible.builtin.copy:
-        dest: "/etc/sudoers.d/{{ item.key }}"
-        content: "%{{ item.key }} {{ item.value.sudo }}\n"
-        mode: '0440'
-        validate: '/usr/sbin/visudo -cf %s'
-      when:
+         dest: "/etc/sudoers.d/{{ item.key }}"
+         content: "%{{ item.key }} {{ item.value.sudo }}\n"
+         mode: '0440'
+         validate: '/usr/sbin/visudo -cf %s'
+       when:
         - item.value.sudo | length > 0
-      loop: "{{ user_roles | dict2items }}"
+       loop: "{{ user_roles | dict2items }}"
   
     
