@@ -3,6 +3,7 @@
 
 - import_tasks: install_rhel.yml
   when: ansible_os_family == "RedHat"
+- import_tasks: configure_pgdata.yml
 
 - import_tasks: service.yml
 - impprt_tasks: pg_hba.yml  
