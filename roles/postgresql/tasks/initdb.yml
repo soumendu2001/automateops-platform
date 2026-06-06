@@ -11,10 +11,4 @@
     - not pg_initialized.stat.exists
   become: yes
 
-# ✅ Debian
-- name: Initialize PostgreSQL database (Debian/Ubuntu)
-  command: pg_createcluster {{ postgres_version }} main --start
-  when:
-    - ansible_os_family == "Debian"
-    - not pg_initialized.stat.exists
-  become: yes
+
