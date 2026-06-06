@@ -67,19 +67,19 @@
        delegate_to: localhost
        register: ssh_keys
        loop: "{{ users }}"
-      when: item.state == "present"
+       when: item.state == "present"
 
-    - name: Set authorized key (single source of truth)
-      ansible.posix.authorized_key:
-         user: "{{ item.item.name }}"
-         key: "{{ item.public_key }}"
-         exclusive: true
-      loop: "{{ ssh_keys.results }}"
-      when: item.public_key is defined
+     - name: Set authorized key (single source of truth)
+       ansible.posix.authorized_key:
+          user: "{{ item.item.name }}"
+          key: "{{ item.public_key }}"
+          exclusive: true
+       loop: "{{ ssh_keys.results }}"
+       when: item.public_key is defined
 
 
-    - name: Setup sudo access
-      ansible.builtin.copy:
+     - name: Setup sudo access
+       ansible.builtin.copy:
         dest: "/etc/sudoers.d/{{ item.key }}"
         content: "%{{ item.key }} {{ item.value.sudo }}\n"
         mode: '0440'
