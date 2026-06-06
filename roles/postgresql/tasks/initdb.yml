@@ -1,22 +1,22 @@
-- name: Check if PostgreSQL data directory exists
+- name: Check if PostgreSQL is already initialized
   stat:
-    path: "{{ postgres_data_dir }}"
-  register: pg_data
+    path: "{{ postgres_data_dir }}/PG_VERSION"
+  register: pg_initialized
 
+# ✅ Debian / Ubuntu
 - name: Initialize PostgreSQL database (Debian/Ubuntu)
-  command: >
-    pg_createcluster {{ postgres_version }} main --start
+  command: pg_createcluster {{ postgres_version }} main --start
   when:
     - ansible_os_family == "Debian"
-    - not pg_data.stat.exists
+    - not pg_initialized.stat.exists
   become: yes
 
-- name: Initialize PostgreSQL database (RHEL/CentOS)
-  command: >
-    /usr/pgsql-{{ postgres_version }}/bin/postgresql-{{ postgres_version }}-setup initdb
+# ✅ RHEL / Amazon Linux / CentOS
+- name: Initialize PostgreSQL database (RHEL family)
+  command: postgresql-setup --initdb
   when:
     - ansible_os_family == "RedHat"
-    - not pg_data.stat.exists
+    - not pg_initialized.stat.exists
   become: yes
 
 - name: Ensure PostgreSQL data directory permissions
@@ -25,4 +25,5 @@
     owner: postgres
     group: postgres
     mode: '0700'
-  when: pg_data.stat.exists
+  when: pg_initialized.stat.exists
+  become: yes
