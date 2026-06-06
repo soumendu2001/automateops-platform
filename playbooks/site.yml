@@ -14,4 +14,148 @@
             - curl
             - unzip
           state: present
+
+  
+  
+     - name: Ensure existence of groups
+       ansible.builtin.group:
+         name: "{{ item }}"
+         state: present
+         loop: >-
+           {{
+             users
+             | map(attribute='group_name')
+             | map('extract', user_roles)
+             | map(attribute='groups')
+             | flatten
+             | unique
+            }}
+
+    - name: Create Users
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        groups: "{{ user_roles[item.group_name].groups | join(',') }}"
+        append: yes
+        create_home: yes
+        password_lock: true
+        shell: "{{ item.shell }}"
+        state: "{{ item.state }}"
+      loop: "{{ users }}"
+    - name: Ensure files directory exists
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/../files"
+        state: directory
+      delegate_to: localhost
+      run_once: true
+
+    - name: Ensure SSH Directories exist
+      ansible.builtin.file:
+        path: "/home/{{ item.name }}/.ssh"
+        state: directory
+        mode: '0700'
+        owner: "{{ item.name }}"
+        group: "{{ item.name }}"
+      when: item.state == "present"
+      loop: "{{ users }}"
+
+    - name: Generate SSH Key pair (idempotent)
+      community.crypto.openssh_keypair:
+         path: "{{ playbook_dir }}/../files/{{ item.name }}"
+         type: ed25519
+         mode: '0600'
+         regenerate: full_idempotence
+      delegate_to: localhost
+      register: ssh_keys
+      loop: "{{ users }}"
+      when: item.state == "present"
+
+    - name: Set authorized key (single source of truth)
+      ansible.posix.authorized_key:
+         user: "{{ item.item.name }}"
+         key: "{{ item.public_key }}"
+         exclusive: true
+      loop: "{{ ssh_keys.results }}"
+      when: item.public_key is defined
+
+
+    - name: Setup sudo access
+      ansible.builtin.copy:
+        dest: "/etc/sudoers.d/{{ item.key }}"
+        content: "%{{ item.key }} {{ item.value.sudo }}\n"
+        mode: '0440'
+        validate: '/usr/sbin/visudo -cf %s'
+      when:
+        - item.value.sudo | length > 0
+      loop: "{{ user_roles | dict2items }}" - name: Apply User configuration
+  
+     - name: Ensure existence of groups
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop: >-
+        {{
+          users
+          | map(attribute='group_name')
+          | map('extract', user_roles)
+          | map(attribute='groups')
+          | flatten
+          | unique
+        }}
+
+    - name: Create Users
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        groups: "{{ user_roles[item.group_name].groups | join(',') }}"
+        append: yes
+        create_home: yes
+        password_lock: true
+        shell: "{{ item.shell }}"
+        state: "{{ item.state }}"
+      loop: "{{ users }}"
+    - name: Ensure files directory exists
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/../files"
+        state: directory
+      delegate_to: localhost
+      run_once: true
+
+    - name: Ensure SSH Directories exist
+      ansible.builtin.file:
+        path: "/home/{{ item.name }}/.ssh"
+        state: directory
+        mode: '0700'
+        owner: "{{ item.name }}"
+        group: "{{ item.name }}"
+      when: item.state == "present"
+      loop: "{{ users }}"
+
+    - name: Generate SSH Key pair (idempotent)
+      community.crypto.openssh_keypair:
+         path: "{{ playbook_dir }}/../files/{{ item.name }}"
+         type: ed25519
+         mode: '0600'
+         regenerate: full_idempotence
+      delegate_to: localhost
+      register: ssh_keys
+      loop: "{{ users }}"
+      when: item.state == "present"
+
+    - name: Set authorized key (single source of truth)
+      ansible.posix.authorized_key:
+         user: "{{ item.item.name }}"
+         key: "{{ item.public_key }}"
+         exclusive: true
+      loop: "{{ ssh_keys.results }}"
+      when: item.public_key is defined
+
+
+    - name: Setup sudo access
+      ansible.builtin.copy:
+        dest: "/etc/sudoers.d/{{ item.key }}"
+        content: "%{{ item.key }} {{ item.value.sudo }}\n"
+        mode: '0440'
+        validate: '/usr/sbin/visudo -cf %s'
+      when:
+        - item.value.sudo | length > 0
+      loop: "{{ user_roles | dict2items }}"
           
