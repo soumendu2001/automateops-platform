@@ -5,26 +5,29 @@ on:
        - 'vars/**'
        - 'inventory/**'
        - 'playbooks/**'
+       - 'roles/**'
 jobs:
    deploy:
      runs-on: ubuntu-latest
      steps:
-       - name: Install Ansible
-         run: |
+        - name: Checkout Depository
+          uses: actions/checkout@v4
+        - name: Install Ansible
+          run: |
            sudo apt update
            sudo apt install ansible -y
 
-       - name: Install Ansible Collection
-         run: |
+        - name: Install Ansible Collection
+          run: |
            ansible-galaxy collection install community.crypto ansible.posix
 
-       - name: Install SSH key
-         run: |
+        - name: Install SSH key
+          run: |
            mkdir -p ~/.ssh
            echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
            chmod 600 ~/.ssh/id_rsa
-       - name: Run Playbook
-         run: |
+        - name: Run Playbook
+          run: |
            ansible-playbook -i inventory/hosts playbooks/site.yml
 
         
