@@ -3,21 +3,21 @@
     name: app_db
     state: present
   become: true
-  become_user: postgres
+  
 
 - name: Create user database
   community.postgresql.postgresql_db:
     name: user_db
     state: present
   become: true
-  become_user: postgres
+  
 
 - name: Create audit database
   community.postgresql.postgresql_db:
     name: audit_db
     state: present
   become: true
-  become_user: postgres
+  
 - name: Create user schema tables
   community.postgresql.postgresql_query:
     db: user_db
@@ -38,7 +38,7 @@
           PRIMARY KEY (user_id, role_id)
       );
   become: true
-  become_user: postgres
+  
 
 - name: Create application schema tables
   community.postgresql.postgresql_query:
@@ -55,7 +55,7 @@
           amount NUMERIC
           );
   become: true
-  become_user: postgres
+  
 
 - name: Create audit schema tables
   community.postgresql.postgresql_query:
@@ -68,6 +68,6 @@
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );
   become: true
-  become_user: postgres
+  
 
   
