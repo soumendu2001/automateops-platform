@@ -2,6 +2,7 @@
   community.postgresql.postgresql_db:
     name: app_db
     state: present
+    login_user: postgres
   become: true
   
 
@@ -68,6 +69,4 @@
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );
   become: true
-  
-
-  
+   
