@@ -10,9 +10,9 @@
      - name: Install common package
        package:
          name:
-            - git
-            - curl
-            - unzip
+           - git
+           - curl
+           - unzip
           state: present
 
   
