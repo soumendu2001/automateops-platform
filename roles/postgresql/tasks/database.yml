@@ -172,9 +172,56 @@
     - roles.csv
     - audit_logs.csv
     - user_roles.csv
-    
-    
-  
+
+- name: Load Applications data
+  community.postgresql.postgresql_query:
+     db: app_db
+     login_user: postgres
+     login_unix_socket: /var/run/postgresql
+     query: |
+       COPY applications(app_name) FROM '{{ data_path}}/applications.csv' 
+       DELIMITER ','
+       CSV HEADER;
+
+- name: Load Users data
+  community.postgresql.postgresql_query:
+     db: user_db
+     login_user: postgres
+     login_unix_socket: /var/run/postgresql
+     query: |
+       COPY users(username) FROM '{{ data_path}}/users.csv' 
+       DELIMITER ','
+       CSV HEADER;
+
+- name: Load roles data
+  community.postgresql.postgresql_query:
+     db: user_db
+     login_user: postgres
+     login_unix_socket: /var/run/postgresql
+     query: |
+       COPY roles(role_name) FROM '{{ data_path}}/roles.csv' 
+       DELIMITER ','
+       CSV HEADER;
+
+- name: Load User Role mapping
+  community.postgresql.postgresql_query:
+     db: user_db
+     login_user: postgres
+     login_unix_socket: /var/run/postgresql
+     query: |
+       COPY user_roles(user_id, role_id)FROM '{{ data_path}}/user_roles.csv' 
+       DELIMITER ','
+       CSV HEADER;
+
+- name: Load Audit Log
+  community.postgresql.postgresql_query:
+     db: audit_db
+     login_user: postgres
+     login_unix_socket: /var/run/postgresql
+     query: |
+       COPY audit_logs(user_id, action)FROM '{{ data_path}}/audit_logs.csv' 
+       DELIMITER ','
+       CSV HEADER;
 
 
  
