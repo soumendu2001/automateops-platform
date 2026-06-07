@@ -23,21 +23,18 @@
     login_user: postgres
     login_unix_socket: /var/run/postgresql
     
-
 - name: Create user database
   community.postgresql.postgresql_db:
     name: user_db
     login_user: postgres
     login_unix_socket: /var/run/postgresql
 
-
 - name: Create audit database
   community.postgresql.postgresql_db:
     name: audit_db
     login_user: postgres
     login_unix_socket: /var/run/postgresql
-    
-  
+   
 - name: Create user schema tables
   community.postgresql.postgresql_query:
     db: user_db
@@ -60,7 +57,6 @@
           PRIMARY KEY (user_id, role_id)
       );
    
-
 - name: Create application schema tables
   community.postgresql.postgresql_query:
     db: app_db
@@ -78,7 +74,6 @@
           amount NUMERIC
           );
    
-
 - name: Create audit schema tables
   community.postgresql.postgresql_query:
     db: audit_db
@@ -113,75 +108,8 @@
      login_user: postgres
      login_unix_socket: /var/run/postgresql
      query: |
-       TRUNCATE audit_logs RESTART IDENTITY CASCADE;
- 
-- name: Insert sample data into applications
-  community.postgresql.postgresql_query:
-    db: app_db
-    login_user: postgres
-    login_unix_socket: /var/run/postgresql
-    query: |
-      INSERT INTO applications (app_name)
-      SELECT 'App_' || i
-      FROM generate_series(1,10) s(i)
-      ON CONFLICT DO NOTHING;
+       TRUNCATE audit_logs RESTART IDENTITY CASCADE;     
       
-- name: Insert sample data into transactions
-  community.postgresql.postgresql_query:
-    db: app_db
-    login_user: postgres
-    login_unix_socket: /var/run/postgresql
-    query: |
-      INSERT INTO transactions (app_id, amount)
-      SELECT (random()*9+1)::int, (random()*1000)::numeric
-      FROM generate_series(1,10)
-      ON CONFLICT DO NOTHING;
-
-- name: Insert sample users
-  community.postgresql.postgresql_query:
-    db: user_db
-    login_user: postgres
-    login_unix_socket: /var/run/postgresql
-    query: |
-      INSERT INTO users (username)
-      SELECT 'user_' || i
-      FROM generate_series(1,10) s(i)
-      ON CONFLICT DO NOTHING;
-      
-- name: Insert sample roles
-  community.postgresql.postgresql_query:
-    db: user_db
-    login_user: postgres
-    login_unix_socket: /var/run/postgresql
-    query: |
-      INSERT INTO roles (role_name)
-      SELECT 'role_' || i
-      FROM generate_series(1,10) s(i)
-      ON CONFLICT DO NOTHING;
-
-- name: Insert sample user-role mappings
-  community.postgresql.postgresql_query:
-    db: user_db
-    login_user: postgres
-    login_unix_socket: /var/run/postgresql
-    query: |
-      INSERT INTO user_roles (user_id, role_id)
-      SELECT u.user_id, r.role_id
-      FROM users u
-      JOIN roles r ON u.user_id = r.role_id
-      LIMIT 10
-      ON CONFLICT DO NOTHING;
-
-- name: Insert sample audit logs
-  community.postgresql.postgresql_query:
-    db: audit_db
-    login_user: postgres
-    login_unix_socket: /var/run/postgresql
-    query: |
-      INSERT INTO audit_logs (user_id, action)
-      SELECT i, 'ACTION_' || i
-      FROM generate_series(1,10) s(i)
-      ON CONFLICT DO NOTHING;
 - name: Create Data Directory
   file:
     path: "{{ data_path }}"
@@ -234,7 +162,7 @@
      login_user: postgres
      login_unix_socket: /var/run/postgresql
      query: |
-       COPY user_roles(user_id, role_id)FROM '{{ data_path}}/user_roles.csv' 
+       COPY user_roles(user_id, role_id) FROM '{{ data_path}}/user_roles.csv' 
        DELIMITER ','
        CSV HEADER;
 
@@ -244,7 +172,7 @@
      login_user: postgres
      login_unix_socket: /var/run/postgresql
      query: |
-       COPY audit_logs(user_id, action)FROM '{{ data_path}}/audit_logs.csv' 
+       COPY audit_logs(user_id, action) FROM '{{ data_path}}/audit_logs.csv' 
        DELIMITER ','
        CSV HEADER;
 
