@@ -1,10 +1,9 @@
 - name: Create application database
   community.postgresql.postgresql_db:
     name: app_db
+    login_user: postgres
     login_unix_socket: /var/run/postgresql
-  become: yes
-  become_user: postgres
-  
+    
 
 - name: Create user database
   community.postgresql.postgresql_db:
