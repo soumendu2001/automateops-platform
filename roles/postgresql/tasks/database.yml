@@ -70,6 +70,10 @@
        );
   become: true
 
+TRUNCATE applications, transactions RESTART IDENTITY CASCADE;
+TRUNCATE users, roles, user_roles RESTART IDENTITY CASCADE;
+TRUNCATE audit_logs RESTART IDENTITY CASCADE;
+
 - name: Insert sample data into applications
   community.postgresql.postgresql_query:
     db: app_db
