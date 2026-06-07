@@ -68,4 +68,73 @@
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );
   become: true
-   
+
+- name: Insert sample data into applications
+  community.postgresql.postgresql_query:
+    db: app_db
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
+    query: |
+      INSERT INTO applications (app_name)
+      SELECT 'App_' || i
+      FROM generate_series(1,10) s(i)
+      ON CONFLICT DO NOTHING;
+      
+- name: Insert sample data into transactions
+  community.postgresql.postgresql_query:
+    db: app_db
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
+    query: |
+      INSERT INTO transactions (app_id, amount)
+      SELECT (random()*9+1)::int, (random()*1000)::numeric
+      FROM generate_series(1,10)
+      ON CONFLICT DO NOTHING;
+
+- name: Insert sample users
+  community.postgresql.postgresql_query:
+    db: user_db
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
+    query: |
+      INSERT INTO users (username)
+      SELECT 'user_' || i
+      FROM generate_series(1,10) s(i)
+      ON CONFLICT DO NOTHING;
+      
+- name: Insert sample roles
+  community.postgresql.postgresql_query:
+    db: user_db
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
+    query: |
+      INSERT INTO roles (role_name)
+      SELECT 'role_' || i
+      FROM generate_series(1,10) s(i)
+      ON CONFLICT DO NOTHING;
+
+- name: Insert sample user-role mappings
+  community.postgresql.postgresql_query:
+    db: user_db
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
+    query: |
+      INSERT INTO user_roles (user_id, role_id)
+      SELECT u.user_id, r.role_id
+      FROM users u
+      JOIN roles r ON u.user_id = r.role_id
+      LIMIT 10
+      ON CONFLICT DO NOTHING;
+
+- name: Insert sample audit logs
+  community.postgresql.postgresql_query:
+    db: audit_db
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
+    query: |
+      INSERT INTO audit_logs (user_id, action)
+      SELECT i, 'ACTION_' || i
+      FROM generate_series(1,10) s(i)
+      ON CONFLICT DO NOTHING;
+
+ 
