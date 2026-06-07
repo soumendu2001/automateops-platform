@@ -8,15 +8,16 @@
 - name: Create user database
   community.postgresql.postgresql_db:
     name: user_db
-    state: present
-  become: true
-  
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
+
 
 - name: Create audit database
   community.postgresql.postgresql_db:
     name: audit_db
-    state: present
-  become: true
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
+    
   
 - name: Create user schema tables
   community.postgresql.postgresql_query:
