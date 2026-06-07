@@ -41,6 +41,8 @@
 - name: Create user schema tables
   community.postgresql.postgresql_query:
     db: user_db
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
     query: |
       CREATE TABLE IF NOT EXISTS users (
           user_id SERIAL PRIMARY KEY,
@@ -62,6 +64,8 @@
 - name: Create application schema tables
   community.postgresql.postgresql_query:
     db: app_db
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
     query: |
       CREATE TABLE IF NOT EXISTS applications (
         app_id SERIAL PRIMARY KEY,
@@ -78,6 +82,8 @@
 - name: Create audit schema tables
   community.postgresql.postgresql_query:
     db: audit_db
+    login_user: postgres
+    login_unix_socket: /var/run/postgresql
     query: |
       CREATE TABLE IF NOT EXISTS audit_logs (
         log_id SERIAL PRIMARY KEY,
@@ -103,7 +109,7 @@
   
 - name: Clean up audit_db tables
   community.postgresql.postgresql_query:
-     db: app_db  
+     db: audit_db  
      login_user: postgres
      login_unix_socket: /var/run/postgresql
      query: |
