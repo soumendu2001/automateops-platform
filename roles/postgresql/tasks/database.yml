@@ -1,3 +1,18 @@
+- name: Allow postgres trust authentication
+  lineinfile:
+    path: /etc/postgresql/18/main/pg_hba.conf
+    regexp: '^local\s+all\s+postgres\s+peer'
+    line: 'local all postgres trust'
+  become: true
+
+- name: Allow all local users trust auth
+  lineinfile:
+    path: /etc/postgresql/18/main/pg_hba.conf
+    regexp: '^local\s+all\s+all\s+peer'
+    line: 'local all all trust'
+  become: true
+
+
 - name: Create application database
   community.postgresql.postgresql_db:
     name: app_db
