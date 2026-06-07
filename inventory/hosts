@@ -2,5 +2,3 @@
 Target1 ansible_host=3.233.199.253 ansible_user=ubuntu ansible_python_interpreter=/usr/bin/python3
 Target2 ansible_host=34.224.127.71 ansible_user=ubuntu ansible_python_interpreter=/usr/bin/python3
 
-[control]
-Control ansible_host=100.50.221.100 ansible_user=ubuntu ansible_python_interpreter=/usr/bin/python3
