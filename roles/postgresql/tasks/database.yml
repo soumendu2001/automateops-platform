@@ -11,7 +11,11 @@
     regexp: '^local\s+all\s+all\s+peer'
     line: 'local all all trust'
   become: true
-
+- name: Restart PostgreSQL post pg_hba change
+  service:
+    name: postgresql@18-main
+    state: restarted
+  become: true
 
 - name: Create application database
   community.postgresql.postgresql_db:
