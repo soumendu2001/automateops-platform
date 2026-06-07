@@ -157,5 +157,24 @@
       SELECT i, 'ACTION_' || i
       FROM generate_series(1,10) s(i)
       ON CONFLICT DO NOTHING;
+- name: Create Data Directory
+  file:
+    path: "{{ data_path }}"
+    state: directory
+    mode: '0755'
+- name: Copy All csv files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ data_path }}/{{ item}}"
+  loop:
+    - applications.csv
+    - users.csv
+    - roles.csv
+    - audit_logs.csv
+    - user_roles.csv
+    
+    
+  
+
 
  
