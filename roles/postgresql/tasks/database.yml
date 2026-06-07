@@ -38,8 +38,7 @@
           role_id INT REFERENCES roles(role_id),
           PRIMARY KEY (user_id, role_id)
       );
-  become: true
-  
+   
 
 - name: Create application schema tables
   community.postgresql.postgresql_query:
@@ -55,8 +54,7 @@
           app_id INT REFERENCES applications(app_id),
           amount NUMERIC
           );
-  become: true
-  
+   
 
 - name: Create audit schema tables
   community.postgresql.postgresql_query:
@@ -68,12 +66,30 @@
         action TEXT,
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
        );
-  become: true
 
-TRUNCATE applications, transactions RESTART IDENTITY CASCADE;
-TRUNCATE users, roles, user_roles RESTART IDENTITY CASCADE;
-TRUNCATE audit_logs RESTART IDENTITY CASCADE;
-
+- name: Clean up app_db tables
+  community.postgresql.postgresql_query:
+     db: app_db  
+     login_user: postgres
+     login_unix_socket: /var/run/postgresql
+     query: |
+       TRUNCATE applications, transactions RESTART IDENTITY CASCADE;
+- name: Clean up user_db tables
+  community.postgresql.postgresql_query:
+     db: user_db  
+     login_user: postgres
+     login_unix_socket: /var/run/postgresql
+     query: |
+       TRUNCATE users, roles, user_roles RESTART IDENTITY CASCADE;
+  
+- name: Clean up audit_db tables
+  community.postgresql.postgresql_query:
+     db: app_db  
+     login_user: postgres
+     login_unix_socket: /var/run/postgresql
+     query: |
+       TRUNCATE audit_logs RESTART IDENTITY CASCADE;
+ 
 - name: Insert sample data into applications
   community.postgresql.postgresql_query:
     db: app_db
