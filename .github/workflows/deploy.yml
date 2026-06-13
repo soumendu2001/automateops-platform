@@ -19,7 +19,7 @@ jobs:
 
         - name: Install Ansible Collection
           run: |
-           ansible-galaxy collection install community.crypto ansible.posix community.postgtresql
+           ansible-galaxy collection install community.crypto ansible.posix community.postgresql
            
 
         - name: Install SSH key
