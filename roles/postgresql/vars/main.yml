@@ -1,4 +1,4 @@
-postgres_version: 14
+postgres_version: 18
 data_path: /tmp/db_data
 
 postgres_data_dir: >-
