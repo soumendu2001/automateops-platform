@@ -1,5 +1,5 @@
 - name: Bootstrap + PostgreSQL + Users
-  hosts: all
+  hosts: target
   become: yes
   vars_files:
     - ../vars/users.yml
